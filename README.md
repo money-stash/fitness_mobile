@@ -16,9 +16,13 @@ FitTrack is a SwiftUI fitness tracking app for iOS. It combines onboarding, work
 
 ## Screenshots
 
-| Dashboard |
-| --- |
-| <img src="docs/screenshots/dashboard.png" alt="FitTrack dashboard on iPhone simulator" width="320"> |
+| Dashboard | Workout Detail | Nutrition |
+| --- | --- | --- |
+| <img src="docs/screenshots/dashboard-dark.png" alt="FitTrack dashboard in dark mode" width="240"> | <img src="docs/screenshots/workout-detail-dark.png" alt="FitTrack workout detail screen in dark mode" width="240"> | <img src="docs/screenshots/nutrition-dark.png" alt="FitTrack nutrition diary in dark mode" width="240"> |
+
+| Statistics | Profile |
+| --- | --- |
+| <img src="docs/screenshots/stats-dark.png" alt="FitTrack statistics screen in dark mode" width="240"> | <img src="docs/screenshots/profile-dark.png" alt="FitTrack profile screen in dark mode" width="240"> |
 
 ## Tech Stack
 
