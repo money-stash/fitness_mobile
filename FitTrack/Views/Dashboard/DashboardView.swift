@@ -172,7 +172,7 @@ struct DashboardView: View {
                 Label(L("dash.workout.done"), systemImage: "checkmark.circle.fill")
                     .font(.headline)
                     .foregroundStyle(.brand)
-                Text(done.name)
+                Text(done.localizedName)
                     .font(.subheadline)
                 HStack(spacing: 16) {
                     Label(done.durationSec.durationLabel, systemImage: "clock")

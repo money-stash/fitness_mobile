@@ -61,7 +61,7 @@ struct ActiveWorkoutView: View {
             }
             .confirmationDialog(L("active.finishConfirm"), isPresented: $showFinishConfirm, titleVisibility: .visible) {
                 Button(L("active.saveWorkout")) {
-                    store.finishSession(name: template.name, startedAt: startedAt, exercises: exercises)
+                    store.finishSession(name: template.nameEn, startedAt: startedAt, exercises: exercises)
                     dismiss()
                 }
                 Button(L("active.notYet"), role: .cancel) {}

@@ -263,6 +263,13 @@ struct WorkoutSession: Codable, Identifiable {
             sum + ex.sets.filter(\.done).reduce(0) { $0 + Double($1.reps) * $1.weight }
         }
     }
+
+    var localizedName: String {
+        if let template = SeedData.templates.first(where: { $0.nameEn == name || $0.nameUk == name }) {
+            return template.name
+        }
+        return name
+    }
 }
 
 // MARK: - Nutrition

@@ -20,7 +20,7 @@ struct WorkoutHistoryView: View {
                         SessionDetailView(session: session)
                     } label: {
                         VStack(alignment: .leading, spacing: 5) {
-                            Text(session.name)
+                            Text(session.localizedName)
                                 .font(.subheadline.weight(.semibold))
                             Text(session.date.timeLabel)
                                 .font(.caption)
@@ -83,7 +83,7 @@ struct SessionDetailView: View {
             .padding()
         }
         .background(Color(.systemGroupedBackground))
-        .navigationTitle(session.name)
+        .navigationTitle(session.localizedName)
         .navigationBarTitleDisplayMode(.inline)
     }
 

@@ -324,7 +324,7 @@ final class AppStore: ObservableObject {
                 let duration = Int.random(in: 2400...4200)
                 let kcal = Int.random(in: 250...500)
                 sessions.append(WorkoutSession(
-                    name: template.name, date: day, durationSec: duration,
+                    name: template.nameEn, date: day, durationSec: duration,
                     exercises: exs, calories: kcal))
             }
             // Food entries.
