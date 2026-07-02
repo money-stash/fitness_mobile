@@ -27,6 +27,10 @@ private struct AppExport: Codable {
 }
 
 final class AppStore: ObservableObject {
+    enum ImportError: Error, Equatable {
+        case invalidFile
+    }
+
     @Published var profile = UserProfile() { didSet { save() } }
     @Published var weights: [WeightEntry] = [] { didSet { save() } }
     @Published var sessions: [WorkoutSession] = [] { didSet { save() } }
@@ -53,14 +57,7 @@ final class AppStore: ObservableObject {
         defer { loaded = true }
         guard let data = try? Data(contentsOf: fileURL),
               let decoded = try? JSONDecoder().decode(AppData.self, from: data) else { return }
-        profile = decoded.profile
-        weights = decoded.weights
-        sessions = decoded.sessions
-        foodEntries = decoded.foodEntries
-        waterEntries = decoded.waterEntries
-        customTemplates = decoded.customTemplates
-        customFoods = decoded.customFoods
-        bookings = decoded.bookings
+        apply(decoded, shouldSave: false)
     }
 
     private func save() {
@@ -118,6 +115,56 @@ final class AppStore: ObservableObject {
             .appendingPathComponent("fittrack-export-\(formatter.string(from: Date())).json")
         try data.write(to: url, options: .atomic)
         return url
+    }
+
+    func importFile(_ url: URL, settings: Settings) throws {
+        let isSecurityScoped = url.startAccessingSecurityScopedResource()
+        defer {
+            if isSecurityScoped {
+                url.stopAccessingSecurityScopedResource()
+            }
+        }
+
+        let fileData = try Data(contentsOf: url)
+        if let export = try? decode(AppExport.self, from: fileData) {
+            settings.language = export.settings.language
+            settings.theme = export.settings.theme
+            apply(export.data, shouldSave: true)
+            return
+        }
+
+        if let appData = try? decode(AppData.self, from: fileData) {
+            apply(appData, shouldSave: true)
+            return
+        }
+
+        throw ImportError.invalidFile
+    }
+
+    private func decode<T: Decodable>(_ type: T.Type, from data: Data) throws -> T {
+        let isoDecoder = JSONDecoder()
+        isoDecoder.dateDecodingStrategy = .iso8601
+        if let decoded = try? isoDecoder.decode(type, from: data) {
+            return decoded
+        }
+        return try JSONDecoder().decode(type, from: data)
+    }
+
+    private func apply(_ data: AppData, shouldSave: Bool) {
+        let wasLoaded = loaded
+        loaded = false
+        profile = data.profile
+        weights = data.weights
+        sessions = data.sessions
+        foodEntries = data.foodEntries
+        waterEntries = data.waterEntries
+        customTemplates = data.customTemplates
+        customFoods = data.customFoods
+        bookings = data.bookings
+        loaded = wasLoaded
+        if shouldSave {
+            saveCurrentData()
+        }
     }
 
     // MARK: - Lookup Data
