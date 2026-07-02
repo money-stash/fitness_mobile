@@ -32,30 +32,6 @@ FitTrack is a SwiftUI fitness tracking app for iOS. It combines onboarding, work
 - Xcode project generated from `project.yml`
 - iOS 17+
 
-## Requirements
-
-- Xcode 15 or newer
-- iOS 17 simulator or device
-- Optional: [XcodeGen](https://github.com/yonaskolb/XcodeGen) if you want to regenerate the Xcode project from `project.yml`
-
-## Getting Started
-
-Open the checked-in Xcode project:
-
-```bash
-open FitTrack.xcodeproj
-```
-
-Select an iPhone simulator and run the app with `Cmd + R`.
-
-If you want to regenerate the project file:
-
-```bash
-brew install xcodegen
-xcodegen generate
-open FitTrack.xcodeproj
-```
-
 ## Data Storage and Export
 
 FitTrack saves app data locally in the app sandbox:
@@ -73,45 +49,6 @@ To export data from the app:
 3. Find the **Data** section.
 4. Tap **Prepare export file**.
 5. Use **Save or share** to export the generated JSON file.
-
-## Project Structure
-
-```text
-FitTrack/
-├── FitTrackApp.swift        # App entry point and tab navigation
-├── Models/Models.swift      # Data models and fitness calculations
-├── Store/
-│   ├── AppStore.swift       # App state, local persistence, export
-│   └── Settings.swift       # Theme, language, and localization helper
-├── Data/
-│   ├── SeedData.swift       # Built-in exercises, foods, trainers, workouts
-│   └── Strings.swift        # English and Ukrainian UI strings
-├── Helpers/Helpers.swift    # Shared extensions and reusable UI
-└── Views/
-    ├── Dashboard/
-    ├── Nutrition/
-    ├── Onboarding/
-    ├── Profile/
-    ├── Stats/
-    ├── Trainers/
-    └── Workouts/
-```
-
-## Testing
-
-Build the app from the command line:
-
-```bash
-xcodebuild -project FitTrack.xcodeproj \
-  -scheme FitTrack \
-  -configuration Debug \
-  -sdk iphonesimulator \
-  -derivedDataPath build \
-  CODE_SIGNING_ALLOWED=NO \
-  build
-```
-
-Run UI tests from Xcode with the `FitTrack` scheme, or from the command line with an available simulator destination.
 
 ## Roadmap Ideas
 
