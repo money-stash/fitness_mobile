@@ -14,6 +14,12 @@ FitTrack is a SwiftUI fitness tracking app for iOS. It combines onboarding, work
 
 > The trainer feature code is still present in the project, but its tab is currently hidden from the main navigation.
 
+## Screenshots
+
+| Dashboard |
+| --- |
+| <img src="docs/screenshots/dashboard.png" alt="FitTrack dashboard on iPhone simulator" width="320"> |
+
 ## Tech Stack
 
 - SwiftUI
