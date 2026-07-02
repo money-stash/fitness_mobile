@@ -68,6 +68,7 @@ struct UserProfile: Codable {
     var goal: Goal = .maintain
     var activity: ActivityLevel = .moderate
     var onboarded: Bool = false
+    var customWaterTargetMl: Int?
 
     /// Basal metabolic rate calculated with the Mifflin-St Jeor formula.
     var bmr: Double {
@@ -91,7 +92,9 @@ struct UserProfile: Codable {
         return max(0, Int(rest / 4))
     }
 
-    var waterTargetMl: Int { Int(weightKg * 33 / 50) * 50 }
+    var recommendedWaterTargetMl: Int { Int(weightKg * 33 / 50) * 50 }
+
+    var waterTargetMl: Int { customWaterTargetMl ?? recommendedWaterTargetMl }
 
     var bmi: Double {
         let h = heightCm / 100

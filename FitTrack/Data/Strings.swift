@@ -226,6 +226,12 @@ enum Strings {
         "edit.goalSection": [.uk: "Ціль", .en: "Goal"],
         "edit.goal": [.uk: "Ціль", .en: "Goal"],
         "edit.activity": [.uk: "Активність", .en: "Activity"],
+        "edit.waterSection": [.uk: "Гідратація", .en: "Hydration"],
+        "edit.water.recommended": [.uk: "Рекомендовано", .en: "Recommended"],
+        "edit.water.current": [.uk: "%d мл на день", .en: "%d ml per day"],
+        "edit.water.useRecommended": [.uk: "Використати рекомендоване", .en: "Use recommended"],
+        "edit.water.footer": [.uk: "Рекомендація рахується приблизно як 33 мл на 1 кг ваги. Ви можете виставити власну денну ціль.",
+                              .en: "The recommendation is based on about 33 ml per 1 kg of body weight. You can set your own daily goal."],
         "edit.newTargets": [.uk: "Нові цілі (перерахунок)", .en: "New targets (recalculated)"],
 
         // MARK: Settings

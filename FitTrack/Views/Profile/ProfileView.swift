@@ -211,6 +211,31 @@ struct EditProfileView: View {
                         }
                     }
                 }
+                Section {
+                    LabeledContent(L("edit.water.recommended"),
+                                   value: "\(draft.recommendedWaterTargetMl) \(L("unit.ml"))")
+                    Stepper(value: Binding(
+                        get: { draft.waterTargetMl },
+                        set: { draft.customWaterTargetMl = $0 }
+                    ), in: 1_000...6_000, step: 100) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text(L("target.water"))
+                            Text(L("edit.water.current", draft.waterTargetMl))
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    Button {
+                        draft.customWaterTargetMl = nil
+                    } label: {
+                        Label(L("edit.water.useRecommended"), systemImage: "wand.and.stars")
+                    }
+                    .disabled(draft.customWaterTargetMl == nil)
+                } header: {
+                    Text(L("edit.waterSection"))
+                } footer: {
+                    Text(L("edit.water.footer"))
+                }
                 Section(L("edit.newTargets")) {
                     LabeledContent(L("target.calories"), value: "\(draft.calorieTarget) \(L("unit.kcal"))")
                     LabeledContent(L("target.protein"), value: "\(draft.proteinTarget) \(L("unit.g"))")
