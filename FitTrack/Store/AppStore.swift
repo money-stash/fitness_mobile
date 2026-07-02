@@ -207,8 +207,23 @@ final class AppStore: ObservableObject {
         waterEntries.filter { $0.date.isSameDay(as: date) }.reduce(0) { $0 + $1.ml }
     }
 
+    func waterEntries(on date: Date) -> [WaterEntry] {
+        waterEntries
+            .filter { $0.date.isSameDay(as: date) }
+            .sorted { $0.date > $1.date }
+    }
+
     func addWater(_ ml: Int, on date: Date = Date()) {
         waterEntries.append(WaterEntry(date: date, ml: ml))
+    }
+
+    @discardableResult
+    func undoLastWater(on date: Date = Date()) -> Bool {
+        guard let last = waterEntries.lastIndex(where: { $0.date.isSameDay(as: date) }) else {
+            return false
+        }
+        waterEntries.remove(at: last)
+        return true
     }
 
     // MARK: - Workouts

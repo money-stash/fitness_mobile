@@ -96,6 +96,7 @@ struct DashboardView: View {
         let current = store.water(on: Date())
         let target = store.profile.waterTargetMl
         let progress = target > 0 ? Double(current) / Double(target) : 0
+        let entries = store.waterEntries(on: Date())
 
         return VStack(alignment: .leading, spacing: 10) {
             HStack {
@@ -122,14 +123,32 @@ struct DashboardView: View {
                 Spacer()
                 if current > 0 {
                     Button {
-                        if let last = store.waterEntries.lastIndex(where: { $0.date.isSameDay(as: Date()) }) {
-                            store.waterEntries.remove(at: last)
-                        }
+                        store.undoLastWater()
                     } label: {
-                        Image(systemName: "arrow.uturn.backward")
+                        Label(L("dash.water.undo"), systemImage: "arrow.uturn.backward")
+                            .labelStyle(.iconOnly)
                             .font(.caption)
                     }
                     .buttonStyle(.bordered)
+                }
+            }
+            if !entries.isEmpty {
+                Divider()
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(L("dash.water.history"))
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                    ForEach(entries.prefix(4)) { entry in
+                        HStack {
+                            Label("+\(entry.ml) \(L("unit.ml"))", systemImage: "drop.fill")
+                                .font(.caption)
+                                .foregroundStyle(.blue)
+                            Spacer()
+                            Text(entry.date.formatted(date: .omitted, time: .shortened))
+                                .font(.caption2)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
                 }
             }
         }

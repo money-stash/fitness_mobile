@@ -182,6 +182,7 @@ struct EditProfileView: View {
     @EnvironmentObject var store: AppStore
     @Environment(\.dismiss) private var dismiss
     @State private var draft = UserProfile()
+    @State private var showManualTargets = false
 
     var body: some View {
         NavigationStack {
@@ -211,37 +212,54 @@ struct EditProfileView: View {
                         }
                     }
                 }
-                Section {
-                    LabeledContent(L("edit.water.recommended"),
-                                   value: "\(draft.recommendedWaterTargetMl) \(L("unit.ml"))")
-                    Stepper(value: Binding(
-                        get: { draft.waterTargetMl },
-                        set: { draft.customWaterTargetMl = $0 }
-                    ), in: 1_000...6_000, step: 100) {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(L("target.water"))
-                            Text(L("edit.water.current", draft.waterTargetMl))
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                    Button {
-                        draft.customWaterTargetMl = nil
-                    } label: {
-                        Label(L("edit.water.useRecommended"), systemImage: "wand.and.stars")
-                    }
-                    .disabled(draft.customWaterTargetMl == nil)
-                } header: {
-                    Text(L("edit.waterSection"))
-                } footer: {
-                    Text(L("edit.water.footer"))
+                Section(L("edit.currentTargets")) {
+                    targetSnapshot(for: store.profile)
                 }
-                Section(L("edit.newTargets")) {
-                    LabeledContent(L("target.calories"), value: "\(draft.calorieTarget) \(L("unit.kcal"))")
-                    LabeledContent(L("target.protein"), value: "\(draft.proteinTarget) \(L("unit.g"))")
-                    LabeledContent(L("target.fat"), value: "\(draft.fatTarget) \(L("unit.g"))")
-                    LabeledContent(L("target.carbs"), value: "\(draft.carbsTarget) \(L("unit.g"))")
-                    LabeledContent(L("target.water"), value: "\(draft.waterTargetMl) \(L("unit.ml"))")
+                Section {
+                    targetSnapshot(for: recommendedDraft)
+                    Button {
+                        applyRecommendedTargets()
+                    } label: {
+                        Label(L("edit.applyRecommended"), systemImage: "wand.and.stars")
+                    }
+                    .disabled(!hasManualTargets)
+                    Button {
+                        prepareManualTargets()
+                    } label: {
+                        Label(L("edit.customizeManual"), systemImage: "slider.horizontal.3")
+                    }
+                } header: {
+                    Text(L("edit.recommendedTargets"))
+                } footer: {
+                    Text(L("edit.targets.footer"))
+                }
+                if showManualTargets {
+                    Section {
+                        Stepper(value: manualIntBinding(\.customCalorieTarget, fallback: draft.recommendedCalorieTarget),
+                                in: 1_200...6_000, step: 50) {
+                            targetStepperLabel(L("target.calories"), value: draft.calorieTarget, unit: L("unit.kcal"))
+                        }
+                        Stepper(value: manualIntBinding(\.customProteinTarget, fallback: draft.recommendedProteinTarget),
+                                in: 40...350, step: 5) {
+                            targetStepperLabel(L("target.protein"), value: draft.proteinTarget, unit: L("unit.g"))
+                        }
+                        Stepper(value: manualIntBinding(\.customFatTarget, fallback: draft.recommendedFatTarget),
+                                in: 20...250, step: 5) {
+                            targetStepperLabel(L("target.fat"), value: draft.fatTarget, unit: L("unit.g"))
+                        }
+                        Stepper(value: manualIntBinding(\.customCarbsTarget, fallback: draft.recommendedCarbsTarget),
+                                in: 0...800, step: 10) {
+                            targetStepperLabel(L("target.carbs"), value: draft.carbsTarget, unit: L("unit.g"))
+                        }
+                        Stepper(value: manualIntBinding(\.customWaterTargetMl, fallback: draft.recommendedWaterTargetMl),
+                                in: 1_000...6_000, step: 100) {
+                            targetStepperLabel(L("target.water"), value: draft.waterTargetMl, unit: L("unit.ml"))
+                        }
+                    } header: {
+                        Text(L("edit.manualTargets"))
+                    } footer: {
+                        Text(L("edit.manualTargets.footer"))
+                    }
                 }
             }
             .navigationTitle(L("edit.title"))
@@ -262,7 +280,72 @@ struct EditProfileView: View {
                     .bold()
                 }
             }
-            .onAppear { draft = store.profile }
+            .onAppear {
+                draft = store.profile
+                showManualTargets = hasManualTargets
+            }
         }
+    }
+
+    private var recommendedDraft: UserProfile {
+        var profile = draft
+        profile.customCalorieTarget = nil
+        profile.customProteinTarget = nil
+        profile.customFatTarget = nil
+        profile.customCarbsTarget = nil
+        profile.customWaterTargetMl = nil
+        return profile
+    }
+
+    private var hasManualTargets: Bool {
+        draft.customCalorieTarget != nil ||
+        draft.customProteinTarget != nil ||
+        draft.customFatTarget != nil ||
+        draft.customCarbsTarget != nil ||
+        draft.customWaterTargetMl != nil
+    }
+
+    private func applyRecommendedTargets() {
+        draft.customCalorieTarget = nil
+        draft.customProteinTarget = nil
+        draft.customFatTarget = nil
+        draft.customCarbsTarget = nil
+        draft.customWaterTargetMl = nil
+        showManualTargets = false
+    }
+
+    private func prepareManualTargets() {
+        draft.customCalorieTarget = draft.customCalorieTarget ?? draft.recommendedCalorieTarget
+        draft.customProteinTarget = draft.customProteinTarget ?? draft.recommendedProteinTarget
+        draft.customFatTarget = draft.customFatTarget ?? draft.recommendedFatTarget
+        draft.customCarbsTarget = draft.customCarbsTarget ?? draft.recommendedCarbsTarget
+        draft.customWaterTargetMl = draft.customWaterTargetMl ?? draft.recommendedWaterTargetMl
+        showManualTargets = true
+    }
+
+    private func targetSnapshot(for profile: UserProfile) -> some View {
+        Group {
+            LabeledContent(L("target.calories"), value: "\(profile.calorieTarget) \(L("unit.kcal"))")
+            LabeledContent(L("target.protein"), value: "\(profile.proteinTarget) \(L("unit.g"))")
+            LabeledContent(L("target.fat"), value: "\(profile.fatTarget) \(L("unit.g"))")
+            LabeledContent(L("target.carbs"), value: "\(profile.carbsTarget) \(L("unit.g"))")
+            LabeledContent(L("target.water"), value: "\(profile.waterTargetMl) \(L("unit.ml"))")
+        }
+    }
+
+    private func targetStepperLabel(_ title: String, value: Int, unit: String) -> some View {
+        VStack(alignment: .leading, spacing: 2) {
+            Text(title)
+            Text("\(value) \(unit)")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private func manualIntBinding(_ keyPath: WritableKeyPath<UserProfile, Int?>, fallback: Int) -> Binding<Int> {
+        Binding(
+            get: { draft[keyPath: keyPath] ?? fallback },
+            set: { draft[keyPath: keyPath] = $0 }
+        )
     }
 }

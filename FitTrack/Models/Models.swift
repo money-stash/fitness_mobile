@@ -68,6 +68,10 @@ struct UserProfile: Codable {
     var goal: Goal = .maintain
     var activity: ActivityLevel = .moderate
     var onboarded: Bool = false
+    var customCalorieTarget: Int?
+    var customProteinTarget: Int?
+    var customFatTarget: Int?
+    var customCarbsTarget: Int?
     var customWaterTargetMl: Int?
 
     /// Basal metabolic rate calculated with the Mifflin-St Jeor formula.
@@ -78,19 +82,27 @@ struct UserProfile: Codable {
 
     var tdee: Double { bmr * activity.factor }
 
-    var calorieTarget: Int { Int(tdee * goal.calorieFactor) }
+    var recommendedCalorieTarget: Int { Int(tdee * goal.calorieFactor) }
 
-    var proteinTarget: Int {
+    var calorieTarget: Int { customCalorieTarget ?? recommendedCalorieTarget }
+
+    var recommendedProteinTarget: Int {
         let perKg = goal == .lose ? 2.0 : 1.8
         return Int(weightKg * perKg)
     }
 
-    var fatTarget: Int { Int(Double(calorieTarget) * 0.25 / 9) }
+    var proteinTarget: Int { customProteinTarget ?? recommendedProteinTarget }
 
-    var carbsTarget: Int {
-        let rest = Double(calorieTarget) - Double(proteinTarget) * 4 - Double(fatTarget) * 9
+    var recommendedFatTarget: Int { Int(Double(recommendedCalorieTarget) * 0.25 / 9) }
+
+    var fatTarget: Int { customFatTarget ?? recommendedFatTarget }
+
+    var recommendedCarbsTarget: Int {
+        let rest = Double(recommendedCalorieTarget) - Double(recommendedProteinTarget) * 4 - Double(recommendedFatTarget) * 9
         return max(0, Int(rest / 4))
     }
+
+    var carbsTarget: Int { customCarbsTarget ?? recommendedCarbsTarget }
 
     var recommendedWaterTargetMl: Int { Int(weightKg * 33 / 50) * 50 }
 

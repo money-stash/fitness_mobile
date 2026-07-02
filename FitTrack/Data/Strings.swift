@@ -214,6 +214,8 @@ enum Strings {
         "profile.resetConfirm": [.uk: "Видалити всі дані та почати спочатку?", .en: "Delete all data and start over?"],
         "profile.resetYes": [.uk: "Так, скинути все", .en: "Yes, reset everything"],
         "profile.version": [.uk: "FitTrack 1.0 • Зроблено з 💪", .en: "FitTrack 1.0 • Made with 💪"],
+        "dash.water.undo": [.uk: "Скасувати воду", .en: "Undo water"],
+        "dash.water.history": [.uk: "Історія сьогодні", .en: "Today history"],
 
         // MARK: Profile Editing
         "edit.title": [.uk: "Редагування", .en: "Editing"],
@@ -233,6 +235,15 @@ enum Strings {
         "edit.water.footer": [.uk: "Рекомендація рахується приблизно як 33 мл на 1 кг ваги. Ви можете виставити власну денну ціль.",
                               .en: "The recommendation is based on about 33 ml per 1 kg of body weight. You can set your own daily goal."],
         "edit.newTargets": [.uk: "Нові цілі (перерахунок)", .en: "New targets (recalculated)"],
+        "edit.currentTargets": [.uk: "Поточні цілі", .en: "Current targets"],
+        "edit.recommendedTargets": [.uk: "Нові рекомендовані цілі", .en: "New recommended targets"],
+        "edit.applyRecommended": [.uk: "Застосувати рекомендовані цілі", .en: "Apply recommended targets"],
+        "edit.customizeManual": [.uk: "Налаштувати вручну", .en: "Customize manually"],
+        "edit.manualTargets": [.uk: "Ручні цілі", .en: "Manual targets"],
+        "edit.targets.footer": [.uk: "Рекомендації перераховуються на основі ваги, зросту, віку, активності та цілі.",
+                                .en: "Recommendations update from weight, height, age, activity and goal."],
+        "edit.manualTargets.footer": [.uk: "Ручні значення замінять рекомендації, поки ви знову не застосуєте рекомендовані цілі.",
+                                      .en: "Manual values override recommendations until you apply recommended targets again."],
 
         // MARK: Settings
         "settings.title": [.uk: "Налаштування", .en: "Settings"],
